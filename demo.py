@@ -8,7 +8,10 @@ from diffusers import LMSDiscreteScheduler, PNDMScheduler
 # utils
 import cv2
 import numpy as np
+import time
 
+def current_milli_time():
+    return round(time.time() * 1000)
 
 def main(args):
     if args.seed is not None:
@@ -42,7 +45,18 @@ def main(args):
         guidance_scale = args.guidance_scale,
         eta = args.eta
     )
-    cv2.imwrite(args.output, image)
+
+    is_outputs_folder_exist = os.path.exists(os.path.join(os.getcwd(), 'outputs'))
+    outputs_folder = os.path.join(os.getcwd(), 'outputs')
+
+    if not is_outputs_folder_exist:
+        os.mkdir(outputs_folder)
+
+    filename = str(current_milli_time()) + args.output
+
+    save_path = os.path.join(outputs_folder, filename)
+
+    cv2.imwrite(save_path, image)
 
 
 if __name__ == "__main__":

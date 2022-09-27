@@ -47,6 +47,8 @@ def generate_image_to_image(strength: Optional[float] = Form(None), prompt: Unio
 def generate_text_to_image(strength: Optional[float] = Form(None), prompt: Union[str, None] = Form()):
     translated_prompt = ts.google(prompt)
 
+    print(translated_prompt)
+
     generate_filename = txt2img(prompt=translated_prompt)
 
     filename = './outputs/' + generate_filename

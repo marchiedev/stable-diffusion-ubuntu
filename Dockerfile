@@ -1,19 +1,15 @@
-FROM python:3.9.9-bullseye
+FROM python:3.9.7
 
-WORKDIR /src
+WORKDIR /app
 
-RUN apt-get update && \
-    apt-get install -y \
-    libgl1 libglib2.0-0
+COPY . .
 
-COPY requirements.txt /src/
+RUN apt-get update
 
-RUN pip3 install -r requirements.txt
+RUN apt-get install ffmpeg libsm6 libxext6  -y
 
-COPY stable_diffusion_engine.py demo.py demo_web.py /src/
-COPY data/ /src/data/
+RUN pip install -r requirements.txt
 
-# download models
-RUN python3 demo.py --num-inference-steps 1 --prompt "test" --output /tmp/test.jpg
+EXPOSE 80
 
-ENTRYPOINT ["python3", "demo.py"]
+CMD [ "uvicorn", "api:app", "--host", "0.0.0.0", "--port", "5001"]
